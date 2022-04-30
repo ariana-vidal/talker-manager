@@ -3,6 +3,12 @@ const bodyParser = require('body-parser');
 const crypto = require('crypto');
 const talker = require('./Middlewares/talker');
 const validaLogin = require('./Middlewares/validaLogin');
+const addTalker = require('./Middlewares/addTalker');
+const validaNameEage = require('./Middlewares/validaNameEage');
+const validaTalk = require('./Middlewares/validaTalk');
+const validaRate = require('./Middlewares/validaRate');
+const validaWatchedAt = require('./Middlewares/validaWatchedAt');
+const validaToken = require('./Middlewares/validaToken');
 
 const app = express();
 app.use(bodyParser.json());
@@ -33,6 +39,27 @@ app.post('/login', validaLogin, (_req, res) => {
   try {
     const token = crypto.randomBytes(8).toString('hex');
     return res.status(200).json({ token });
+  } catch (error) {
+    return res.status(500).end();
+  }
+});
+
+app.post('/talker', validaNameEage, validaTalk, validaWatchedAt, validaRate, validaToken, async (req, res) => {
+  try {
+    const { name, age, talk, watchedAt, rate } = req.body;
+    const talke = await addTalker.getTalker();
+
+    if (talke.map((palestrante) => palestrante.name).includes(name)) {
+      return res.status(409).json({ message: 'id já cadastrado' });
+    }
+
+    const newTalker = { name, age, talk, watchedAt, rate, id: talke.length + 1 };
+
+    talke.push(newTalker);
+
+    await addTalker.setTalker(talke);
+
+    return res.status(201).json(newTalker);
   } catch (error) {
     return res.status(500).end();
   }
