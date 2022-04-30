@@ -9,6 +9,7 @@ const validaTalk = require('./Middlewares/validaTalk');
 const validaRate = require('./Middlewares/validaRate');
 const validaWatchedAt = require('./Middlewares/validaWatchedAt');
 const validaToken = require('./Middlewares/validaToken');
+const editTalker = require('./Middlewares/editTalker');
 
 const app = express();
 app.use(bodyParser.json());
@@ -68,6 +69,17 @@ app.post('/talker',
   } catch (error) {
     return res.status(500).end();
   }
+});
+
+app.put('/talker/:id',
+  validaToken,
+  validaNameEage,
+  validaTalk,
+  validaRate,
+  validaWatchedAt,
+  editTalker,
+  (_req, _res) => {
+    
 });
 
 app.listen(PORT, () => {
