@@ -1,6 +1,6 @@
 const validaToken = (req, res, next) => {
-  console.log(req);
-  const { headers: { authorization } } = req;
+  const { authorization } = req.headers;
+  console.log(authorization);
   if (!authorization) {
     return res.status(401).json({ message: 'Token não encontrado' });
   }

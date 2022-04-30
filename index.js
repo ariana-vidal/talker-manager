@@ -45,11 +45,11 @@ app.post('/login', validaLogin, (_req, res) => {
 });
 
 app.post('/talker',
+  validaToken,
   validaNameEage,
   validaTalk,
   validaWatchedAt,
-  validaRate,
-  validaToken, async (req, res) => {
+  validaRate, async (req, res) => {
   try {
     const { name, age, talk, watchedAt, rate } = req.body;
     const talke = await addTalker.getTalker();
