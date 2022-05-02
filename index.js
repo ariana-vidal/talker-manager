@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const crypto = require('crypto');
+const fs = require('fs').promises;
 const talker = require('./Middlewares/talker');
 const validaLogin = require('./Middlewares/validaLogin');
 const addTalker = require('./Middlewares/addTalker');
@@ -80,6 +81,18 @@ app.put('/talker/:id',
   editTalker,
   (_req, _res) => {
     
+});
+
+app.delete('/talker/:id', validaToken, async (req, res) => {
+  const { id } = req.params;
+
+  const talkers = await fs.readFile('talker.json')
+    .then((data) => JSON.parse(data))
+    .catch((err) => console.log(err.message));
+
+  const newList = talkers.filter((person) => person.id !== Number(id));
+  fs.writeFile('talker.json', JSON.stringify(newList));
+  return res.status(204).end();
 });
 
 app.listen(PORT, () => {
