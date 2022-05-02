@@ -1,3 +1,5 @@
+// https://stackoverflow.com/questions/6177975/how-to-validate-date-with-format-mm-dd-yyyy-in-javascript
+
 const verDate = (date) => {
   const dateParts = date.split('/');
   const day = Number(dateParts[0]);
